@@ -69,4 +69,4 @@ Never commit API keys, access tokens, passwords, private webhook URLs, session c
 
 ## About
 
-Built as a practical portfolio project by **Yesy121**, showcasing applied AI automation and workflow development.
+Built as a practical portfolio project by **Ola Tesleem**, showcasing applied AI automation and workflow development.
