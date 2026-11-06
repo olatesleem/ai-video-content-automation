@@ -1,32 +1,47 @@
 # Architecture
 
-## Purpose
+This repository contains two separate n8n workflows that cover different parts of a short-form content operation.
 
-Coordinate the production of faceless short-form videos through connected automation and media services.
+## 1. Video generation and voiceover preparation
 
-## High-level flow
+The active branch in the supplied export is:
 
-1. **Content queue — Google Sheets**  
-   Holds the content records consumed by the workflow. The exact column names and status transitions must be documented from the workflow export.
+```text
+Schedule Trigger
+  -> Get row(s) in sheet
+  -> AI Agent3 (health concept)
+  -> Save Idea & Metadata to Google Sheets1
+  -> Set Master Prompt1
+  -> AI Agent4 (four scenes + narration)
+      +-> URL Final Video2 (write prompts/script to Sheets)
+      +-> Update row in sheet (update source status/title)
+      +-> Format Prompt1 (currently no downstream connection)
+```
 
-2. **Orchestration — n8n**  
-   Coordinates the process, transfers data between services, and manages the integration steps.
+The first agent uses the queued topic to create a structured health-education concept. The second agent turns the concept into four connected scene prompts, approximately 15 seconds each, and a voiceover script. The master prompt sets a Wan 2.2 label and 9:16 aspect ratio.
 
-3. **Stock media — Pexels**  
-   Supplies candidate stock footage for the video.
+## 2. Social-media publishing
 
-4. **Voice generation — Kokoro TTS**  
-   Generates narration. The project configuration previously noted voice `af_bella`; confirm this against the current workflow before changing it.
+```text
+Schedule Trigger
+  -> Google Sheets - Read Row
+  -> Postiz1 (retrieve integrations)
+  -> Postiz2 (submit post)
+  -> Update row in sheet1 (mark POSTED)
+```
 
-5. **Rendering — Short Video Maker**  
-   Receives the selected media and narration and produces the video output.
+This workflow uses a spreadsheet row as the source for the video asset reference and post content, then updates the TikTok status after the Postiz node.
 
-6. **Publishing — Postiz**  
-   Handles the publishing stage, with TikTok as the intended destination.
+## Boundary between the workflows
 
-## Important implementation notes
+The exports are separate. They both use Google Sheets, but the supplied graph does not prove a fully configured hand-off from generated media to the publishing workflow. The operator must ensure that the generated video asset ID/path and the publishing row are populated consistently.
 
-- Captions are currently disabled in the described configuration.
-- This document intentionally does not specify node names, exact payload fields, retry rules, or status updates until they are checked against the exported n8n JSON.
-- The diagram in the README is a conceptual view, not an execution trace.
-- Add screenshots or a redacted execution example only after removing personal data and credentials.
+## Rendering branch status
+
+The video workflow contains a separate intended branch involving a video-generation HTTP request, wait/poll, download, Google Drive upload, and final URL update. In the supplied export:
+- the generation, wait, download, upload and final-URL nodes are disabled;
+- the `Format Prompt1` output is not connected to `Generate Video with VEO`;
+- the `Split Out` node has no incoming connection;
+- the model naming is inconsistent: the master prompt says Wan 2.2, while the format-code node labels its payload `veo3_fast`.
+
+Treat rendering as unfinished until these points are reconciled and tested.
