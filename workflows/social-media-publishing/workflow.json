@@ -1,0 +1,405 @@
+{
+  "name": "create video post",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Content calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "TIKTOK STATUS": "POSTED",
+            "ID": "={{ $('Google Sheets - Read Row').item.json.ID }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content ",
+              "displayName": "Content ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Video_Url",
+              "displayName": "Video_Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video id",
+              "displayName": "video id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video Status",
+              "displayName": "video Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "postis video ID",
+              "displayName": "postis video ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "postis video Path",
+              "displayName": "postis video Path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "TIKTOK STATUS",
+              "displayName": "TIKTOK STATUS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        112
+      ],
+      "id": "e3fc11ec-5318-4ef0-8040-d23eb5c69713",
+      "name": "Update row in sheet1",
+      "notes": "Marks the corresponding content-calendar row as POSTED after the Postiz publishing step.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "getIntegrations"
+      },
+      "type": "n8n-nodes-postiz.postiz",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -48
+      ],
+      "id": "9236b02d-9488-4969-96af-3b219d3dca20",
+      "name": "Postiz1",
+      "notes": "Retrieves the connected Postiz social integrations.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "date": "2026-08-12T13:43:01",
+        "tags": {
+          "tag": []
+        },
+        "posts": {
+          "post": [
+            {
+              "integrationId": "={{ $json.id }}",
+              "settings": {
+                "setting": [
+                  {
+                    "key": "privacy_level",
+                    "stringValue": "PUBLIC_TO_EVERYONE"
+                  },
+                  {
+                    "key": "duet",
+                    "valueType": "boolean"
+                  },
+                  {
+                    "key": "stitch",
+                    "valueType": "boolean"
+                  },
+                  {
+                    "key": "comment",
+                    "booleanValue": true,
+                    "valueType": "boolean"
+                  },
+                  {
+                    "key": "autoAddMusic",
+                    "stringValue": "no"
+                  },
+                  {
+                    "key": "brand_content_toggle",
+                    "valueType": "boolean"
+                  },
+                  {
+                    "key": "brand_organic_toggle",
+                    "valueType": "boolean"
+                  },
+                  {
+                    "key": "video_made_with_ai",
+                    "valueType": "boolean"
+                  },
+                  {
+                    "key": "content_posting_method",
+                    "stringValue": "UPLOAD"
+                  },
+                  {
+                    "key": "title",
+                    "stringValue": "Organize your way to better health"
+                  }
+                ]
+              },
+              "value": {
+                "contentItem": [
+                  {
+                    "content": "Organize your way to better health 🥕 #healthytips #easychanges #foodhacks #fridgegoals #smartlife #healthyliving #wellnessjourney #mealprep #foodorganization #healthyhabits #nutritiontips #foodiehack",
+                    "image": {
+                      "imageItem": [
+                        {
+                          "id": "={{ $('Google Sheets - Read Row').item.json['postis video ID'] }}",
+                          "path": "={{ $('Google Sheets - Read Row').item.json['postis video Path'] }}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-postiz.postiz",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -16
+      ],
+      "id": "e42cbb9c-7d10-48cc-b3b3-7df6f5a15562",
+      "name": "Postiz2",
+      "notes": "Submits a TikTok post using the selected Postiz integration and video asset ID/path from the spreadsheet. The exported example includes fixed sample copy and a fixed date; review before enabling.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Content calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "TIKTOK STATUS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "17521fd1-8c08-4291-b948-778722a20b74",
+      "name": "Google Sheets - Read Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -272,
+        -16
+      ],
+      "notes": "Reads the content-calendar row(s) using the TIKTOK STATUS column as the configured lookup field. Confirm the filter value and row-selection behaviour before production use.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        272,
+        -272
+      ],
+      "id": "5fdc80d6-77b7-4678-bc69-779372a1f2a9",
+      "name": "When clicking ‘Execute workflow’",
+      "disabled": true,
+      "notes": "Disabled manual test trigger retained from the original export.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtMinute": 10
+            },
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            },
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -512,
+        -16
+      ],
+      "id": "ed3148e2-c09b-4a1f-a334-293588cc1666",
+      "name": "Schedule Trigger",
+      "notes": "Scheduled publishing entry point. The export contains multiple interval entries; review the schedule configuration before activation.",
+      "notesInFlow": true
+    }
+  ],
+  "connections": {
+    "Postiz1": {
+      "main": [
+        [
+          {
+            "node": "Postiz2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postiz2": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Read Row": {
+      "main": [
+        [
+          {
+            "node": "Postiz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Read Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  }
+}
