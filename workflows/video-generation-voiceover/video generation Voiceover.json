@@ -1,0 +1,1151 @@
+{
+  "name": "video generation Voiceover",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=Generate a highly visual health education video concept.\n\n[[\n\nThe concept must be suitable for a 60-second faceless TikTok, Instagram Reel, or YouTube Short.\n\nFocus on this health topic only:\n{{ $json['Content '] }}\n\n\nThe concept must include:\n\n- HOOK: a surprising or attention-grabbing statement\n- PROBLEM: a common health issue or mistake\n- HEALTH TIP: a simple actionable health recommendation\n- WHY IT WORKS: a short explanation based on basic health science\n- BENEFIT: the positive outcome\n- VISUAL STORY: how the concept can be visually demonstrated\n- ENVIRONMENT: suitable setting for the video\n- STYLE: 2-3 visual style tags\n- PALETTE: 2-3 color keywords\n- CAMERA: one camera movement\n- LIGHTING: one lighting style\n- MOOD: one emotional descriptor\n- SOUND: sound\n- TITLE: title \n- CAPTION: caption\n- VOICEOVER: voiceover\n\nRequirements:\n\n- Information must be generally accepted health advice.\n- Avoid medical diagnoses.\n- Avoid treatment claims.\n- Avoid controversial health topics.\n- Avoid unrealistic transformations.\n- The visual story should be easy to represent with AI-generated video.\n- Prioritize concepts that can be shown through objects, food, environments, body movement, daily routines, or scientific visualizations.\n- Make the idea feel viral, educational, and visually engaging.\n\nReturn only valid JSON always.\n\n\n\n]]\n\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a health content strategist creating short-form educational video ideas.\n\nGenerate exactly one health tip.\n\nRules:\n\n- The information must be generally accepted health advice.\n- Avoid medical diagnoses.\n- Avoid treatment claims.\n- Avoid controversial health topics.\n- Keep explanations concise.\n- Make the tip visually demonstrable.\n\nSpecial instructions for:\n\n1. **For the Environment**  \n   - Maximum 20 words.  \n   - Must match the action in the Idea exactly.  \n   - Specify setting (room, landscape, lab…), visual details (lighting, textures, transitions…), and style (cinematic, stylized, timelapse, slow-motion…).\n\n2. **For the Sound**  \n   - Maximum 15 words.  \n   - Describe the sound design (e.g., “beat drop at transition,” “soft rain before, energetic music after”).\n\n4. **For the Caption**  \n   - Short, punchy, viral-friendly.  \n   - Include **one emoji**.  \n   - Exactly **12 hashtags** in this order:  \n     1. 4 transformation-relevant hashtags  \n     2. 4 all-time most popular hashtags  \n     3. 4 currently trending hashtags (based on live research)  \n   - All in lowercase.\n\n/no_think\nDo not include markdown.\nDo not explain your answer.\nDo not wrap the JSON in ``` blocks.\nReturn ONLY valid JSON.\n\n{\n  \"title\": \"Short video title\",\n  \"hook\": \"Attention-grabbing opening statement\",\n  \"problem\": \"\",\n  \"health_tip\": \"The actual health tip\",\n  \"why_it_works\": \"Brief explanation\",\n  \"benefit\": \"Primary benefit\",\n  \"visual_story\": \"\",\n  \"environment\": \"Suggested visual setting\",\n  \"style\": \"\",\n  \"palette\": \"\",\n  \"camera\": \"\",\n  \"lighting\": \"\",\n  \"mood\": \"\",\n  \"Voiceover\": \"Voiceover\",\n  \"sound\": \"Suggested sound design\",\n  \"caption\": \"caption\"\n}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1120,
+        464
+      ],
+      "id": "f86665a6-5bba-4f35-b6d4-ca84ff1d1f2d",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "description": "=Use the tool to think about something. It will not obtain new information or change the database, but just append the thought to the log. Use it when complex reasoning or some cache memory is needed."
+      },
+      "id": "b75af194-720a-43c0-bdf0-e9a6752f2ea8",
+      "name": "Tool: Inject Creative Perspective (Idea)1",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        1280,
+        672
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"Short video title\",\n  \"hook\": \"Attention-grabbing opening statement\",\n  \"problem\": \"\",\n  \"health_tip\": \"The actual health tip\",\n  \"why_it_works\": \"Brief explanation\",\n  \"benefit\": \"Primary benefit\",\n  \"visual_story\": \"\",\n  \"environment\": \"Suggested visual setting\",\n  \"style\": \"\",\n  \"palette\": \"\",\n  \"camera\": \"\",\n  \"lighting\": \"\",\n  \"mood\": \"\",\n\n  \"sound\": \"Suggested sound design\",\n  \"caption\": \"caption\"\n}"
+      },
+      "id": "666b4b98-138d-4712-b940-32b25efa88ef",
+      "name": "Parse AI Output (Idea, Environment, Sound)1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1424,
+        608
+      ],
+      "typeVersion": 1.2,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "id": "f8b2d7ba-9acf-42bd-9f03-685d4ccb2dad",
+      "name": "Think1",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        1056,
+        1152
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc2e0500-57b1-4615-82cb-1c950e5f2ec4",
+              "name": "json_master",
+              "type": "string",
+              "value": "={\n  \"description\": \"Brief narrative description of the scene, focusing on key visual storytelling and product transformation.\",\n  \"style\": \"cinematic | photorealistic | stylized | gritty | elegant\",\n  \"camera\": {\n    \"type\": \"fixed | dolly | Steadicam | crane combo\",\n    \"movement\": \"describe any camera moves like slow push-in, pan, orbit\",\n    \"lens\": \"optional lens type or focal length for cinematic effect\"\n  },\n  \"lighting\": {\n    \"type\": \"natural | dramatic | high-contrast\",\n    \"sources\": \"key lighting sources (sunset, halogen, ambient glow...)\",\n    \"FX\": \"optional VFX elements like fog, reflections, flares\"\n  },\n  \"environment\": {\n    \"location\": \"describe location or room (kitchen, desert, basketball court...)\",\n    \"set_pieces\": [\n      \"list of key background or prop elements\",\n      \"e.g. hardwood floors, chain-link fence, velvet surface\"\n    ],\n    \"mood\": \"describe the ambient atmosphere (moody, clean, epic...)\"\n  },\n  \"elements\": [\n    \"main physical items involved (product box, accessories, vehicles...)\",\n    \"include brand visibility (logos, packaging, texture...)\"\n  ],\n  \"subject\": {\n    \"character\": {\n      \"description\": \"optional – physical description, outfit\",\n      \"pose\": \"optional – position or gesture\",\n      \"lip_sync_line\": \"optional – spoken line if there’s a voiceover\"\n    },\n    \"product\": {\n      \"brand\": \"Brand name\",\n      \"model\": \"Product model or name\",\n      \"action\": \"description of product transformation or assembly\"\n    }\n  },\n  \"motion\": {\n    \"type\": \"e.g. transformation, explosion, vortex\",\n    \"details\": \"step-by-step visual flow of how elements move or evolve\"\n  },\n  \"VFX\": {\n    \"transformation\": \"optional – describe style (neon trails, motion blur...)\",\n    \"impact\": \"optional – e.g. shockwave, glow, distortion\",\n    \"particles\": \"optional – embers, sparks, thread strands...\",\n    \"environment\": \"optional – VFX affecting the scene (ripples, wind...)\"\n  },\n  \"audio\": {\n    \"music\": \"optional – cinematic score, trap beat, ambient tone\",\n    \"sfx\": [\n      \"list of sound effects (zip, pop, woosh...)\"\n    ],\n    \"ambience\": \"optional – background soundscape (traffic, wind...)\",\n    \"voiceover\": {\n      \"delivery\": \"tone and style (confident, whisper, deep...)\",\n      \"line\": \"text spoken if applicable\"\n    }\n  },\n  \"ending\": \"Final shot description – what is seen or felt at the end (freeze frame, logo pulse, glow...)\",\n  \"text\": \"none | overlay | tagline | logo pulse at end only\",\n  \"format\": \"16:9 | 4k | vertical\",\n  \"keywords\": [\n    \"brand\",\n    \"scene style\",\n    \"motion type\",\n    \"camera style\",\n    \"sound mood\",\n    \"target theme\"\n  ]\n}\n"
+            },
+            {
+              "id": "3c6ea609-e426-46d3-8617-2e289a833a64",
+              "name": "model",
+              "type": "string",
+              "value": "Wan 2.2"
+            },
+            {
+              "id": "f15acf81-840c-4e09-9ff3-1647b634875f",
+              "name": "aspectRatio",
+              "type": "string",
+              "value": "9:16"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2416e7b2-286f-4b82-ad3d-218dd9f93146",
+      "name": "Set Master Prompt1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1760,
+        656
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "jsCode": "const structuredPrompt = $input.first().json.output.final_prompt;\nreturn {\n  json: {\n    prompt: JSON.stringify(structuredPrompt), // this escapes it correctly!\n    model: \"veo3_fast\",\n    aspectRatio:\"9:16\"\n  }\n};\n"
+      },
+      "id": "8b14ec28-4b3d-4ade-8e62-5815d523256f",
+      "name": "Format Prompt1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1520,
+        1056
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a cinematic 60-second health education video using the provided health concept.\n\nINPUTS\n\n- title: {{ $('Save Idea & Metadata to Google Sheets1').item.json.title }}\n- hook: {{ $('Save Idea & Metadata to Google Sheets1').item.json.hook }}\n- problem: {{ $('Save Idea & Metadata to Google Sheets1').item.json.problem }}\n- health_tip: {{ $('Save Idea & Metadata to Google Sheets1').item.json.health_tip }}\n- why_it_works: {{ $('Save Idea & Metadata to Google Sheets1').item.json.why_it_works }}\n- benefit: {{ $('Save Idea & Metadata to Google Sheets1').item.json.benefit }}\n- visual_story: {{ $('Save Idea & Metadata to Google Sheets1').item.json.visual_story }}\n- environment: {{ $('Save Idea & Metadata to Google Sheets1').item.json.Environment }}\n- style: {{ $('Save Idea & Metadata to Google Sheets1').item.json.style }}\n- palette: {{ $('Save Idea & Metadata to Google Sheets1').item.json.palette }}\n- camera: {{ $('Save Idea & Metadata to Google Sheets1').item.json.camera }}\n- lighting: {{ $('Save Idea & Metadata to Google Sheets1').item.json.lighting }}\n- mood: {{ $('Save Idea & Metadata to Google Sheets1').item.json.mood }}\n- Voiceover: {{ $('Save Idea & Metadata to Google Sheets1').item.json['  Voiceover'] }}\n- sound: {{ $('Save Idea & Metadata to Google Sheets1').item.json.sound }}\n\nTASK\n\nConvert the health concept into FOUR connected Wan 2.2 video prompts, and a Final prompt combining the four prompts\n\nEach prompt represents approximately 15 seconds.\n\nTogether the four prompts must create one complete 60-second educational story with a voiceover.\n\nSCENE FLOW\n\nScene 1:\nCreate a powerful visual hook and introduce the health problem.\n\nScene 2:\nShow the recommended health action or habit.\n\nScene 3:\nVisually explain why the health tip works using cinematic scientific visualization, environmental storytelling, symbolic imagery, or realistic demonstrations.\n\nScene 4:\nReveal the positive outcome and final benefit.\n\nFinal promt:\ncombination of the four prompts\n\nRULES\n\n- Maintain the same visual style throughout all scenes.\n- Maintain consistent environment, lighting, palette, and mood.\n- Use cinematic realism.\n- Use highly detailed visual descriptions.\n- Optimize for vertical 9:16.\n- Focus on movement and visual storytelling.\n- Avoid text overlays.\n- Avoid subtitles.\n- Avoid logos.\n- Avoid watermarks.\n- Avoid UI elements.\n- Every scene should naturally flow into the next scene.\n- Each scene must include:\n  - Subject\n  - Environment\n  - Camera movement\n  - Lighting\n  - Color palette\n  - Mood\n  - Motion\n  - Visual details\n\nReturn ONLY valid JSON always in this format:\n\n{\n  \"title\": \"Short title\",\n  \"scene_1\": \"15-second Wan 2.2 prompt showing the BEFORE state\",\n  \"scene_2\": \"15-second Wan 2.2 prompt showing the transformation beginning\",\n  \"scene_3\": \"15-second Wan 2.2 prompt showing the transformation climax\",\n  \"scene_4\": \"15-second Wan 2.2 prompt showing the final AFTER state\",\n  \"final_prompt\": \"Combination of the four Wan 2.2 scene prompts\",\n  \"voiceover\": \"A complete narration script covering all four scenes\"\n}\n\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert cinematic prompt engineer for Wan 2.2.\n\nYour task is to convert a health tip into four connected video scenes, and a final prompt thats a combination of the four connected video scenes.\n\nfor the voice over the \n\nRules:\n\n- Create exactly four scenes.\n- Each scene should represent approximately 15 seconds.\n- The four scenes together should form one complete 60-second story.\n- Maintain visual consistency across all scenes.\n- Use cinematic realism.\n- Vertical 9:16 composition.\n- High detail.\n- Educational storytelling.\n- No text overlays.\n- No subtitles.\n- No logos.\n- No watermarks.\n\nScene Structure:\n\nScene 1:\nIntroduce the health problem or hook.\n\nVoiceover for Scene 1:\nIntroduce the health problem or hook.\n\nScene 2:\nDemonstrate the health tip.\n\nVoiceover for Scene 2:\nDemonstrate the health tip.\n\nScene 3:\nVisualize why the tip works.\n\nVoiceover for Scene 3:\nVisualize why the tip works.\n\nScene 4:\nShow the positive outcome or benefit.\n\nVoiceover for Scene 4:\nShow the positive outcome or benefit.\n\nFinal promt:\ncombination of the four prompts\n\nEach scene must include:\n- Subject\n- Environment\n- Camera movement\n- Lighting\n- Mood\n- Visual details\n- Motion\n\n/no_think\nDo not include markdown.\nDo not explain your answer.\nDo not wrap the JSON in ``` blocks.\nReturn ONLY valid JSON.\n*******\n\nVOICEOVER REQUIREMENTS\n\nLength:\n- Minimum duration: 1 minute.\n- Maximum duration: 1 minute 30 seconds.\n- Target duration: 70–90 seconds.\n- Approximately 150–220 words.\n- Never generate voiceovers shorter than 1 minute.\nElevenLabs Optimization:\n- The script must be written specifically for ElevenLabs text-to-speech generation.\n- Write as if a real person is speaking directly to the audience.\n- The script must sound natural when spoken aloud.\n- The script must flow smoothly from one sentence to the next.\n- Use conversational language.\n- Include natural pauses.\n- Use short and medium-length sentences.\n- Be easy to listen to.\n- Be easy for AI voices to pronounce.\n- Feel like a wellness creator talking directly to viewers.\nThe script must not sound like:\n- A blog article.\n- A textbook.\n- An essay.\n- A medical report.\n- A news report.\n- A list being read aloud.\n\nTone:\n\nUse a tone that is:\n\n- Friendly.\n- Conversational.\n- Motivational.\n- Encouraging.\n- Relatable.\n- Human-sounding.\n- Warm.\n- Supportive.\n\nThe audience should feel like a trusted friend is sharing advice.\n\nLanguage Style to use:\n\n- Simple English.\n- Everyday vocabulary.\n- Clear explanations.\n- Natural transitions.\n\nAvoid:\n\n- Robotic language.\n- Academic language.\n- Medical jargon.\n- Overly formal wording.\n- Complex terminology.\n- Bullet-point narration.\n- Long complicated sentences.\n\nSpeech Rhythm:\n\n- Optimize the script for voice generation.\n- Use natural pauses.\n- Use contractions where appropriate such as:\n  - you're\n  - it's\n  - don't\n  - that's\n  - you're not alone\n- Use smooth transitions between ideas.\n- The script should sound good when read aloud without additional editing.\n\nListener Retention:\n\nThe voiceover should maintain audience attention throughout the entire video.\n\nRequirements:\n\n- Strong hook within the first sentence.\n- Create curiosity early.\n- Introduce a relatable problem.\n- Deliver useful information gradually.\n- End with a memorable takeaway.\n- Finish with an engagement question or challenge.\n\nEmotional Delivery:\n\nThe script should naturally create one or more of these emotions:\n\n- Curiosity.\n- Inspiration.\n- Motivation.\n- Hope.\n- Encouragement.\n- Self-improvement.\n- Confidence.\n\nAvoid:\n\n- Fear-based messaging.\n- Guilt-based messaging.\n- Negative or shaming language.\n\nRead-Aloud Test\n\nThe final voiceover is machine-fed directly into TTS without human editing.\n\nAssume that EVERY character you output will be spoken aloud.\n\nTherefore, if something is not supposed to be spoken by the narrator, DO NOT OUTPUT IT.\n\nParentheses, brackets, asterisks, quotation marks, stage directions, tone directions, and meta-comments are forbidden unless they are genuinely part of the spoken sentence.\n\nOutput plain spoken narration only.\n\n\n\nBefore finalizing the voiceover, ensure it passes this test:\n\n\"If this script is pasted directly into ElevenLabs and generated without editing, it should sound natural, engaging, conversational, and professional.\"\n***********\n\nReturn ONLY valid JSON in this format always:\n\n{\n  \"title\": \"Short title\",\n  \"scene_1\": \"15-second Wan 2.2 prompt showing the BEFORE state\",\n  \"voiceover_scene_1\": \"A complete narration script covering scene 1\",\n  \"scene_2\": \"15-second Wan 2.2 prompt showing the transformation beginning\",\n  \"voiceover_scene_2\": \"A complete narration script covering scene 2\",\n  \"scene_3\": \"15-second Wan 2.2 prompt showing the transformation climax\",\n  \"voiceover_scene_3\": \"A complete narration script covering scene 3\",\n  \"scene_4\": \"15-second Wan 2.2 prompt showing the final AFTER state\",\n  \"voiceover_scene_4\": \"A complete narration script covering scene 4\",\n  \"final_prompt\": \"Combination of the four Wan 2.2 scene prompts\",\n  \"voiceover\": \"A complete narration script covering all four scenes\"\n}\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        944,
+        896
+      ],
+      "id": "da983560-8459-43c2-a1d8-b6021d71fc88",
+      "name": "AI Agent4"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"Short title\",\n  \"scene_1\": \"15-second Wan 2.2 prompt showing the BEFORE state\",\n  \"voiceover_scene_1\": \"A complete narration script covering scene 1\",\n  \"scene_2\": \"15-second Wan 2.2 prompt showing the transformation beginning\",\n  \"voiceover_scene_2\": \"A complete narration script covering scene 2\",\n  \"scene_3\": \"15-second Wan 2.2 prompt showing the transformation climax\",\n  \"voiceover_scene_3\": \"A complete narration script covering scene 3\",\n  \"scene_4\": \"15-second Wan 2.2 prompt showing the final AFTER state\",\n  \"voiceover_scene_4\": \"A complete narration script covering scene 4\",\n  \"final_prompt\": \"Combination of the four Wan 2.2 scene prompts\",\n  \"voiceover\": \"A complete narration script covering all four scenes\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        1136
+      ],
+      "id": "c86f67db-d88e-41a2-ab31-e1e07d4c1b64",
+      "name": "Structured Output Parser",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1kkw5fnxHQAr9rOCH2PNURnvBjv5fNw_VMkFhOYQ44dw/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fF0q_mjqIhwaA55Y62MbiVjABXILofXDMC2daq8vXW8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "==ROW()-1",
+            "caption": "={{ $json.output.caption }}",
+            "Environment": "={{ $json.output.environment }}",
+            "sound": "={{ $json.output.sound }}",
+            "hook": "={{ $json.output.hook }}",
+            "problem": "={{ $json.output.problem }}",
+            "health_tip": "={{ $json.output.health_tip }}",
+            "why_it_works": "={{ $json.output.why_it_works }}",
+            "benefit": "={{ $json.output.benefit }}",
+            "visual_story": "={{ $json.output.visual_story }}",
+            "style": "={{ $json.output.style }}",
+            "palette": "={{ $json.output.palette }}",
+            "camera": "={{ $json.output.camera }}",
+            "lighting": "={{ $json.output.lighting }}",
+            "mood": "={{ $json.output.mood }}",
+            "title": "={{ $json.output.title }}",
+            "  Voiceover": "={{ $json.output.Voiceover }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Environment",
+              "displayName": "Environment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "health_tip",
+              "displayName": "health_tip",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "why_it_works",
+              "displayName": "why_it_works",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "benefit",
+              "displayName": "benefit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "visual_story",
+              "displayName": "visual_story",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "style",
+              "displayName": "style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sound",
+              "displayName": "sound",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "palette",
+              "displayName": "palette",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "mood",
+              "displayName": "mood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lighting",
+              "displayName": "lighting",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "camera",
+              "displayName": "camera",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "  Voiceover",
+              "displayName": "  Voiceover",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Final_Voiceover",
+              "displayName": "Final_Voiceover",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "scene_1",
+              "displayName": "scene_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "scene_2",
+              "displayName": "scene_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "scene_3",
+              "displayName": "scene_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "scene_4",
+              "displayName": "scene_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Full prompt",
+              "displayName": "Full prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "54f3f2e6-8e36-4c09-b4f1-2bbd385d49f1",
+      "name": "Save Idea & Metadata to Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1744,
+        416
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+          "mode": "list",
+          "cachedResultName": "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        672
+      ],
+      "id": "cdae7d9a-f759-4485-af94-f0bd7a12f120",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+          "mode": "list",
+          "cachedResultName": "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        1072
+      ],
+      "id": "32289ecf-46a9-45f1-899b-fe1aa94911ed",
+      "name": "OpenAI Chat Model1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1kkw5fnxHQAr9rOCH2PNURnvBjv5fNw_VMkFhOYQ44dw/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kkw5fnxHQAr9rOCH2PNURnvBjv5fNw_VMkFhOYQ44dw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "scene_1": "={{ $json.output.voiceover_scene_1 }}",
+            "scene_2": "={{ $json.output.voiceover_scene_2 }}",
+            "scene_3": "={{ $json.output.voiceover_scene_3 }}",
+            "scene_4": "={{ $json.output.voiceover_scene_4 }}",
+            "title": "={{ $('Save Idea & Metadata to Google Sheets1').item.json.title }}",
+            "Full prompt": "={{ $json.output.final_prompt }}",
+            "Final_Voiceover": "={{ $json.output.voiceover }}",
+            "idea": "={{ $('Get row(s) in sheet').item.json[\"Content \"] }}",
+            "production": "for production",
+            "id": "={{ $('Get row(s) in sheet').item.json.ID }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Environment",
+              "displayName": "Environment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "health_tip",
+              "displayName": "health_tip",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "why_it_works",
+              "displayName": "why_it_works",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "benefit",
+              "displayName": "benefit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "visual_story",
+              "displayName": "visual_story",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "style",
+              "displayName": "style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sound",
+              "displayName": "sound",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "palette",
+              "displayName": "palette",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mood",
+              "displayName": "mood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "lighting",
+              "displayName": "lighting",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "camera",
+              "displayName": "camera",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "  Voiceover",
+              "displayName": "  Voiceover",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Final_Voiceover",
+              "displayName": "Final_Voiceover",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scene_1",
+              "displayName": "scene_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scene_2",
+              "displayName": "scene_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scene_3",
+              "displayName": "scene_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scene_4",
+              "displayName": "scene_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full prompt",
+              "displayName": "Full prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "741061fb-6f43-4987-8e81-2c6498ccd704",
+      "name": "URL Final Video2",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        2016,
+        816
+      ],
+      "typeVersion": 4.5,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk",
+          "mode": "list",
+          "cachedResultName": "Content calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Done",
+            "Title": "={{ $json.output.title }}",
+            "ID": "={{ $('Get row(s) in sheet').item.json.ID }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content ",
+              "displayName": "Content ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Video_Url",
+              "displayName": "Video_Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video id",
+              "displayName": "video id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2144,
+        992
+      ],
+      "id": "6957369e-7323-4abe-8959-99e080355624",
+      "name": "Update row in sheet"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk",
+          "mode": "list",
+          "cachedResultName": "Content calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        480
+      ],
+      "id": "e6083582-4775-477e-b95a-3f262d670e49",
+      "name": "Get row(s) in sheet"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16,
+              "triggerAtMinute": 7
+            },
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        480
+      ],
+      "id": "a023aed8-026a-4027-9320-4fee48fcd2d0",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Save Idea & Metadata to Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool: Inject Creative Perspective (Idea)1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Output (Idea, Environment, Sound)1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Master Prompt1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent4": {
+      "main": [
+        [
+          {
+            "node": "Format Prompt1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "URL Final Video2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Idea & Metadata to Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Set Master Prompt1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2f043357-db0f-4478-818c-e80c806f06c9",
+  "meta": {
+    "instanceId": "a768cadf6d12eb7bdc54577d031fdd7aada4e124a5438a4a95b051aab7449d6c"
+  },
+  "nodeGroups": [],
+  "id": "chB3qWtq0THDYlWb",
+  "tags": []
+}
