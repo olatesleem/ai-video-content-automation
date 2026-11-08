@@ -1,36 +1,58 @@
-# Setup guide
+# Setup Guide
 
-This guide describes the expected service categories. Exact versions, node settings, environment variables, and endpoint paths should be taken from the reviewed workflow export and the deployment being used.
+This guide covers the configuration required after importing the sanitized workflow exports. It does not claim that the user's live infrastructure has been independently tested.
 
-## Prerequisites
+## 1. Import the workflows
 
-- An n8n instance
-- A Google account and a Google Sheets content queue
-- Pexels API access
-- Kokoro TTS service access
-- A running Short Video Maker service
-- A Postiz instance with the intended social account connected
-- API credentials and webhook configuration for the integrations actually used
+Import each JSON export separately into n8n:
+- `workflows/Generate Video Voiceover.json`
+- `workflows/Generate video from the voiceover.json`
+- `workflows/social-media-publishing/workflow.json`
 
-## Configuration checklist
+The exports are inactive. Keep them inactive while reconnecting credentials and checking mappings.
 
-1. Import the sanitised workflow JSON into n8n.
-2. Recreate required credentials inside n8n. Do not paste secrets into workflow notes or this repository.
-3. Confirm the Google Sheets document and expected columns.
-4. Confirm the Pexels API credential and permitted request limits.
-5. Confirm the Kokoro TTS endpoint and voice configuration.
-6. Confirm the Short Video Maker endpoint and required input format.
-7. Confirm Postiz connectivity and the target publishing account.
-8. Run a test using non-sensitive sample content before enabling scheduled or unattended execution.
+## 2. Reconnect credentials
 
-## Before running unattended
+Create/select credentials in n8n for each service used by the nodes:
+- Google Sheets
+- AI model/provider APIs
+- Pexels or other HTTP services used for visual search
+- Postiz
+- Any additional APIs referenced by enabled nodes
 
-- Add error handling and notifications for failed service calls.
-- Confirm duplicate prevention and the workflow's retry behaviour.
-- Check API quotas, service availability, and publishing permissions.
-- Keep a record of generated output and publishing status.
-- Review each external service's terms and content rights.
+Do not paste API keys directly into node parameters or commit them to this repository.
 
-## Not yet specified
+## 3. Configure Google Sheets
 
-The public documentation does not yet include exact endpoint URLs, node-by-node settings, sheet column names, or a tested import procedure. Those details should be added only after reviewing the current workflow export.
+Replace placeholders in the imported nodes:
+- `REPLACE_WITH_VOICEOVER_SHEET_ID`
+- `REPLACE_WITH_CONTENT_CALENDAR_SHEET_ID`
+
+Confirm spreadsheet tab names, column names, row IDs, and read/update operations. The exports refer to separate voiceover and Content calendar sheets.
+
+## 4. Configure the Short Video Maker service
+
+Workflow 02 calls a separately deployed Short Video Maker service. The user's deployment notes identify the upstream project as [gyoridavid/ai_agents_az](https://github.com/gyoridavid/ai_agents_az), using the `episode_7` project area and a Docker service exposed on port `3123`.
+
+The following are the user's supplied configuration notes, not independently verified deployment instructions:
+- Docker image: `gyoridavid/short-video-maker:latest-tiny`
+- Container name: `short-video-maker`
+- Port mapping: `3123:3123`
+- Data directory mounted at `/app/data`
+- Environment configuration noted: `LOG_LEVEL=debug`, `DATA_DIR_PATH=/app/data`, `DOCKER=true`, `WHISPER_MODEL=tiny.en`, `KOKORO_MODEL_PRECISION=q4`, `CONCURRENCY=1`, and `VIDEO_CACHE_SIZE_IN_BYTES=2097152000`
+- Pexels API key supplied through a secure environment variable
+- Docker network noted as `n8n_default`
+
+The exact command sequence and Whisper installation details can vary with the upstream project version. Follow the upstream repository's current instructions and verify the service health endpoint/logs before connecting n8n. Do not assume a host path, container network, or service URL without checking your deployment.
+
+## 5. Review publishing
+
+Workflow 02 includes publishing nodes, and Workflow 03 publishes through Postiz. Review the destinations, media fields, captions, scheduling, and retry behavior. Workflow 03 currently has hardcoded title/caption values in the supplied export.
+
+## 6. Test and activate
+
+1. Run one test record through each workflow separately.
+2. Verify sheet updates and rendered video output.
+3. Verify that retries do not create duplicate posts.
+4. Publish to a private/test destination.
+5. Enable production triggers only after all checks pass.
