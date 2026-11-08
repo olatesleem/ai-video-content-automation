@@ -1,30 +1,32 @@
-# Security and safe sharing
+# Security and Public-Repository Notes
 
-This repository is public. Treat every committed file as visible to anyone.
+## Sanitization applied to these exports
 
-## Never commit
+Before committing the supplied workflow exports:
+- Removed n8n credential objects from nodes.
+- Replaced private Google Sheets document identifiers and URLs with placeholders.
+- Replaced the exposed NVIDIA bearer token with a placeholder.
+- Removed pinned execution data and workflow-instance metadata.
+- Set all exported workflows to inactive.
 
-- API keys, bearer tokens, OAuth refresh/access tokens, or passwords
-- n8n credential exports or encryption keys
-- Private webhook URLs or URLs containing secret query parameters
-- Session cookies or authorization headers
-- Personal email addresses, phone numbers, private social account identifiers, or customer data
-- Real production content that is confidential or personally identifying
+Credentials must be reconnected in your own n8n instance after import.
 
-## Safe workflow export process
+## Credential rotation
 
-1. Export the workflow JSON from n8n.
-2. Inspect every node, parameter, header, URL, expression, and sticky note.
-3. Remove credentials and replace private values with placeholders such as `YOUR_API_KEY`.
-4. Remove personal data and private account identifiers.
-5. Check that no secret is embedded in a URL, expression, or example payload.
-6. Import the redacted file into a test n8n environment, if possible, to ensure the redaction has not broken the structure.
-7. Commit only the sanitised version.
+An NVIDIA API bearer token was present in the supplied Workflow 02 export and had been exposed in conversation/source material. Treat that token as compromised: revoke it and create a replacement in the provider console. Do not reuse it.
 
-## If a secret is exposed
+If any Pexels or other API key was previously pasted into chat, logs, screenshots, or a public repository, rotate it as well. This repository intentionally uses placeholders.
 
-Revoke or rotate it at the provider immediately. Removing it in a later commit does not make the exposed secret safe; it may remain in Git history.
+## Safe operating practices
 
-## Credential management
+- Store secrets in n8n credentials or a secrets manager, not in workflow JSON.
+- Keep production spreadsheet IDs and personal account identifiers out of public exports.
+- Restrict API scopes and social account permissions to the minimum needed.
+- Review publishing destinations before activating workflows.
+- Add idempotency/deduplication logic before enabling automatic retries on post-creation operations.
+- Keep the renderer and n8n endpoints private or authenticated where possible.
+- Review upstream dependency changes before updating the Short Video Maker deployment.
 
-Store credentials in n8n's credential manager or an appropriate secret manager. Use environment variables for deployment configuration where suitable. Keep production credentials separate from test credentials.
+## Validation boundary
+
+Static JSON parsing and sanitization do not prove that credentials, APIs, Docker networking, video rendering, or social publishing work at runtime. Test in a controlled environment before production use.
