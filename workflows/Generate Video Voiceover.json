@@ -142,7 +142,7 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "https://docs.google.com/spreadsheets/d/1kkw5fnxHQAr9rOCH2PNURnvBjv5fNw_VMkFhOYQ44dw/edit?gid=0#gid=0",
+          "value": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit?gid=0#gid=0",
           "mode": "url"
         },
         "sheetName": {
@@ -150,7 +150,7 @@
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Feuille 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fF0q_mjqIhwaA55Y62MbiVjABXILofXDMC2daq8vXW8/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -491,7 +491,7 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "https://docs.google.com/spreadsheets/d/1kkw5fnxHQAr9rOCH2PNURnvBjv5fNw_VMkFhOYQ44dw/edit?gid=0#gid=0",
+          "value": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit?gid=0#gid=0",
           "mode": "url"
         },
         "sheetName": {
@@ -499,7 +499,7 @@
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Feuille 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kkw5fnxHQAr9rOCH2PNURnvBjv5fNw_VMkFhOYQ44dw/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -811,17 +811,17 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk",
+          "value": "REPLACE_WITH_CONTENT_CALENDAR_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Content calendar",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -934,17 +934,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk",
+          "value": "REPLACE_WITH_CONTENT_CALENDAR_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Content calendar",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10MJZ6tPHyX1iSg6is8D9VFxkHCSj2xrVmApPOUOVelk/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit#gid=0"
         },
         "filtersUI": {
           "values": [
@@ -991,7 +991,6 @@
       "name": "Schedule Trigger"
     }
   ],
-  "pinData": {},
   "connections": {
     "AI Agent3": {
       "main": [
@@ -1141,11 +1140,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "a19e3aaf-1bea-43f4-8cb8-0ef516dab397",
-  "meta": {
-    "instanceId": "a768cadf6d12eb7bdc54577d031fdd7aada4e124a5438a4a95b051aab7449d6c"
-  },
+  "meta": {},
   "nodeGroups": [],
-  "id": "chB3qWtq0THDYlWb",
   "tags": []
 }
