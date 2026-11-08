@@ -1,47 +1,58 @@
-# Architecture
+# System Architecture
 
-This repository contains two separate n8n workflows that cover different parts of a short-form content operation.
-
-## 1. Video generation and voiceover preparation
-
-The active branch in the supplied export is:
+## Workflow sequence and boundaries
 
 ```text
-Schedule Trigger
-  -> Get row(s) in sheet
-  -> AI Agent3 (health concept)
-  -> Save Idea & Metadata to Google Sheets1
-  -> Set Master Prompt1
-  -> AI Agent4 (four scenes + narration)
-      +-> URL Final Video2 (write prompts/script to Sheets)
-      +-> Update row in sheet (update source status/title)
-      +-> Format Prompt1 (currently no downstream connection)
+Content idea / source row
+        |
+        v
+01 — Generate Video Voiceover
+        |
+        | structured concept, voiceover and metadata
+        v
+Google Sheets (voiceover data)
+        |
+        v
+02 — Generate Video from the Voiceover
+        |
+        | read voiceover, prepare scenes and visual search data
+        v
+Short Video Maker service (external rendering dependency)
+        |
+        | rendered video / result metadata
+        v
+Google Sheets and workflow status updates
+        |
+        +----> Social publishing nodes contained in Workflow 02
+
+Content calendar Google Sheet
+        |
+        v
+03 — Create Video Post
+        |
+        v
+Postiz integrations
+        |
+        v
+Social post + spreadsheet status update
 ```
 
-The first agent uses the queued topic to create a structured health-education concept. The second agent turns the concept into four connected scene prompts, approximately 15 seconds each, and a voiceover script. The master prompt sets a Wan 2.2 label and 9:16 aspect ratio.
+The diagram shows the roles represented in the supplied exports. It does not imply that Workflow 02 automatically triggers Workflow 03, or that every sheet update is a direct trigger for the next workflow. Confirm the actual trigger and row-selection conditions in n8n after import.
 
-## 2. Social-media publishing
+## Workflow responsibilities
 
-```text
-Schedule Trigger
-  -> Google Sheets - Read Row
-  -> Postiz1 (retrieve integrations)
-  -> Postiz2 (submit post)
-  -> Update row in sheet1 (mark POSTED)
-```
+- **Workflow 01:** generates a health-education content concept and voiceover, then stores metadata in Google Sheets.
+- **Workflow 02:** reads voiceover information, prepares four-scene video inputs and Pexels search terms, builds a Short Video Maker payload, requests rendering, and contains additional publishing/status-update nodes.
+- **Workflow 03:** reads a row from the Content calendar, resolves Postiz integrations, creates a post, and updates the spreadsheet.
 
-This workflow uses a spreadsheet row as the source for the video asset reference and post content, then updates the TikTok status after the Postiz node.
+## External service
 
-## Boundary between the workflows
+Video rendering is delegated to a separately deployed service based on [gyoridavid/ai_agents_az](https://github.com/gyoridavid/ai_agents_az). The n8n workflow integrates with that service; it is not a reimplementation of the upstream renderer.
 
-The exports are separate. They both use Google Sheets, but the supplied graph does not prove a fully configured hand-off from generated media to the publishing workflow. The operator must ensure that the generated video asset ID/path and the publishing row are populated consistently.
+## Operational considerations
 
-## Rendering branch status
-
-The video workflow contains a separate intended branch involving a video-generation HTTP request, wait/poll, download, Google Drive upload, and final URL update. In the supplied export:
-- the generation, wait, download, upload and final-URL nodes are disabled;
-- the `Format Prompt1` output is not connected to `Generate Video with VEO`;
-- the `Split Out` node has no incoming connection;
-- the model naming is inconsistent: the master prompt says Wan 2.2, while the format-code node labels its payload `veo3_fast`.
-
-Treat rendering as unfinished until these points are reconciled and tested.
+- Keep rendering and publishing responsibilities observable as separate stages.
+- Use stable row identifiers and idempotency controls when retrying operations that create posts.
+- Verify the rendered asset URL/path before handing it to a publishing node.
+- Review schedule triggers and publishing destinations before activation.
+- Both Workflow 02 and Workflow 03 include publishing functionality. Coordinate them to prevent duplicate publication.
