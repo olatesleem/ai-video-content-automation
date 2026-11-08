@@ -227,14 +227,14 @@
                   },
                   {
                     "key": "title",
-                    "stringValue": "Organize your way to better health"
+                    "stringValue": "={{ $('Google Sheets - Read Row').item.json.Title }}"
                   }
                 ]
               },
               "value": {
                 "contentItem": [
                   {
-                    "content": "Organize your way to better health 🥕 #healthytips #easychanges #foodhacks #fridgegoals #smartlife #healthyliving #wellnessjourney #mealprep #foodorganization #healthyhabits #nutritiontips #foodiehack",
+                    "content": "={{ $('Google Sheets - Read Row').item.json['Content '] }}",
                     "image": {
                       "imageItem": [
                         {
