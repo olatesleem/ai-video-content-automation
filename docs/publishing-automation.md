@@ -1,28 +1,28 @@
-# Social-media publishing workflow
+# Social Media Publishing Automation
 
-**Export:** `workflows/social-media-publishing/workflow.json`
+This project has two publishing routes:
 
-## Purpose
+1. Publishing nodes embedded in Workflow 02.
+2. Workflow 03, which reads a row from the Content calendar Google Sheet and publishes through Postiz.
 
-Publish a prepared video post through Postiz and update the associated Google Sheets content-calendar row.
+## Workflow 03 — Postiz
 
-## Main stages
+The Postiz title and caption/content are dynamically mapped from the row returned by `Google Sheets - Read Row`:
 
-1. **Schedule:** `Schedule Trigger` starts the publishing workflow. The exported schedule contains multiple interval entries, including repeated 10-minute intervals; review this configuration before activation.
-2. **Read content row:** `Google Sheets - Read Row` reads from the content calendar using the `TIKTOK STATUS` column as its configured lookup field. Confirm the filter value and returned-row behaviour in your own sheet.
-3. **Find publishing destination:** `Postiz1` retrieves available Postiz integrations.
-4. **Create post:** `Postiz2` uses the selected integration and video asset ID/path from the spreadsheet to submit a post. The exported node contains example copy and a fixed date; replace these with the intended row-driven values or desired schedule.
-5. **Update status:** `Update row in sheet1` matches the row by `ID` and sets `TIKTOK STATUS` to `POSTED`.
+- Post title: `Title`
+- Post caption/content: `Content ` (note the trailing space in the supplied column name)
 
-## Configuration required
+The workflow also reads the video asset identifier and path from `postis video ID` and `postis video Path`.
+
+Check the sheet headers carefully. If the actual caption column is named `Content` without a trailing space, edit the n8n expression to match the actual header. The row's Content field should contain the caption and hashtags intended for publication.
+
+## Before enabling
 
 - Reconnect Google Sheets and Postiz credentials.
-- Replace the `YOUR_GOOGLE_SHEET_ID` placeholder.
-- Confirm the sheet tab and the exact field names, especially `TIKTOK STATUS`, `ID`, `postis video ID` and `postis video Path`.
-- Ensure the row-selection logic returns only content ready to publish.
-- Replace the sample caption/title and fixed post date before activating.
-- Test the Postiz integration and confirm the resulting post status before relying on the spreadsheet update.
+- Verify the correct Postiz integration and social destination.
+- Confirm video ID/path values are valid and accessible to Postiz.
+- Review the schedule trigger and row filtering.
+- Test against a private/test destination.
+- Ensure Workflow 02 and Workflow 03 cannot publish the same content twice.
 
-## Export status
-
-The original export contains six nodes, including one disabled manual trigger. The public copy preserves the original node graph and disabled trigger, removes credential references and spreadsheet identifiers, and is set inactive.
+The repository exports are inactive. Static JSON validation does not verify live Postiz behavior.
