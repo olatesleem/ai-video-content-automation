@@ -1,85 +1,72 @@
 # AI Video Content Automation
 
-An n8n portfolio project for AI-assisted short-form health video planning, voiceover scripting, scene-prompt generation, and social publishing.
+An n8n-based content production system that turns spreadsheet-driven health-education ideas into voiceover-led short-form videos and supports social publishing.
 
-**Portfolio focus:** AI agent orchestration, structured outputs, spreadsheet-driven workflows, API integrations, workflow state tracking, and social-media operations.
+This repository contains three separate workflow exports:
 
-## Project overview
-
-The repository contains two distinct workflows:
-
-1. **Video generation and voiceover preparation** — reads a queued content topic, drafts a health-education concept, creates a voiceover, and prepares four connected vertical-scene prompts with a combined prompt.
-2. **Social-media publishing** — reads a content-calendar row, retrieves Postiz integrations, submits a video post, and updates the TikTok status in the sheet.
-
-These are separate workflow exports. The current exports do not establish a fully connected, automatic hand-off from the video-generation workflow to the publishing workflow; they share a spreadsheet-oriented operating model, but the integration between the two should be verified/configured in the user's n8n instance.
-
-## Workflow architecture
-
-```text
-CONTENT QUEUE (Google Sheets)
-          |
-          v
-   n8n video preparation
-          |
-          +--> AI concept + health tip
-          |
-          +--> Structured concept metadata
-          |
-          +--> Four scene prompts + voiceover
-          |
-          +--> Write prompts/script to Sheets
-
-SEPARATE PUBLISHING WORKFLOW
-          |
-          +--> Read publishing row from Sheets
-          +--> Retrieve Postiz integrations
-          +--> Submit post with stored video asset reference
-          +--> Mark TikTok status as POSTED
-```
-
-The scene-prompt workflow contains disabled and disconnected video-rendering nodes. The public export therefore documents the prompt/voiceover preparation stage and the intended rendering branch, but it should not be represented as a fully operational end-to-end renderer until that branch is reconnected and tested.
+| Workflow | Purpose |
+|---|---|
+| 01 — Generate Video Voiceover | Develops a health-content concept and voiceover, then stores the generated metadata in Google Sheets. |
+| 02 — Generate Video from the Voiceover | Reads a voiceover record, prepares scene and visual-search data, calls the Short Video Maker service to render a video, and includes social-publishing nodes. |
+| 03 — Create Video Post | Reads video/post data from the Content calendar sheet, uses Postiz integrations to create a social post, and updates the sheet. |
 
 ## Repository structure
 
-- [Video generation and voiceover workflow](workflows/video-generation-voiceover/workflow.json)
-- [Social publishing workflow](workflows/social-media-publishing/workflow.json)
-- [Video generation notes](docs/video-generation.md)
-- [Publishing notes](docs/publishing-automation.md)
-- [Architecture](docs/architecture.md)
-- [Setup guide](docs/setup.md)
-- [Security notes](docs/security.md)
+```text
+workflows/
+  Generate Video Voiceover.json
+  Generate video from the voiceover.json
+  social-media-publishing/
+    workflow.json
+docs/
+  architecture.md
+  workflow-01-voiceover.md
+  workflow-02-video-generation.md
+  workflow-03-publishing.md
+  setup.md
+  security.md
+```
 
-## Technology and integrations visible in the exports
+## Architecture at a glance
 
-- n8n for workflow orchestration
-- Google Sheets for content queue, metadata, voiceover and status tracking
-- AI Agent and structured-output parser nodes for concept and scene generation
-- OpenAI-compatible chat model nodes configured with the model identifier `nvidia/llama-3.3-nemotron-super-49b-v1.5`
-- Wan 2.2 named in the master prompt configuration
-- Postiz for social publishing
-- Google Drive, HTTP video-generation and WhatsApp nodes are present in the video workflow export but disabled
+1. A content idea is processed by Workflow 01 to produce a structured concept and voiceover.
+2. Workflow 02 consumes voiceover data, prepares visual scenes/search terms, and sends a rendering payload to the separately deployed Short Video Maker service.
+3. Workflow 02 also contains social-publishing functionality. Workflow 03 is an additional Postiz-based publishing workflow that reads from the Content calendar sheet. These are distinct publishing paths; this repository does not assume they are automatically chained together.
 
-The workflow also contains a dormant `veo3_fast` model label in a code node. This conflicts with the Wan 2.2 configuration and needs to be reconciled before the rendering branch is activated.
+## Requirements
 
-## Import and configuration
+- A running n8n instance compatible with the exported node versions.
+- Google Sheets credentials and the relevant spreadsheet structures.
+- The AI provider credentials used by the workflows.
+- A reachable Short Video Maker service for video rendering.
+- Postiz account/integrations for Workflow 03.
+- API credentials required by any enabled external services.
 
-1. Import the relevant JSON into your n8n instance.
-2. Reconnect Google Sheets, model-provider, Postiz, Google Drive, HTTP-auth and WhatsApp credentials as required.
-3. Replace the `YOUR_GOOGLE_SHEET_ID` and `YOUR_WORKFLOW_ID` placeholders with your own resource identifiers.
-4. Confirm sheet tabs, column names, row filters, schedule rules, Postiz integration, posting date and media references.
-5. Keep the workflow inactive while configuring and testing. The public exports are intentionally inactive.
+The exports are sanitized for public sharing. They do not include your live credentials or private spreadsheet IDs. Configure placeholders and reconnect credentials after importing.
 
-See [Setup](docs/setup.md) and [Security](docs/security.md).
+## Import and configure
 
-## Validation and limitations
+1. Download or clone this repository.
+2. In n8n, import each JSON file separately.
+3. Reconnect credentials for Google Sheets, AI providers, HTTP services, and Postiz where applicable.
+4. Replace the Google Sheets document placeholders with your own spreadsheet IDs and confirm sheet/tab names and column mappings.
+5. Configure the Short Video Maker endpoint so it is reachable from the n8n runtime.
+6. Review every publishing node, account integration, destination, and schedule before enabling a workflow.
+7. Test with a non-public test record before activating production runs.
 
-- Both exported JSON files were parsed and checked for unique node names and references to missing connection targets.
-- Credential objects and account-specific spreadsheet/workflow identifiers were removed or replaced with placeholders.
-- Disabled nodes were preserved, not deleted, so the export retains the original design intent.
-- The exports have not been executed against live services. JSON and connection-graph checks are not proof of runtime correctness.
-- The video-generation branch is incomplete in the exported graph: the prompt-formatting output is not connected to the video-generation request, and the rendering/download/upload nodes are disabled.
-- The publishing workflow contains a fixed sample post date and sample caption; review these before use.
+See [setup guide](docs/setup.md), [architecture](docs/architecture.md), and [security notes](docs/security.md).
 
-## About
+## External rendering dependency and attribution
 
-Built by **Ola Tesleem** as a practical portfolio project demonstrating applied AI automation and n8n workflow development.
+The Short Video Maker deployment is based on the upstream project [gyoridavid/ai_agents_az](https://github.com/gyoridavid/ai_agents_az). That upstream implementation is not authored by this repository owner. This project documents its use as an external rendering dependency and the integration from n8n.
+
+## Project status and validation
+
+The workflow JSON files were parsed and sanitized before being committed. Credential objects and private spreadsheet identifiers were removed/replaced, and the exports were left inactive. This is a static export validation only: no live n8n execution, API connectivity, rendering, or social publishing test is claimed.
+
+## Important limitations
+
+- Workflow 03 currently contains hardcoded post title and caption values in its Postiz node. Those fields are not dynamically mapped from the spreadsheet in the supplied export.
+- Workflow 02 has its own publishing nodes, so review both publishing paths to avoid unintended duplicate posts.
+- Google Sheets placeholders must be configured consistently across the workflows.
+- Imported workflows may require node-version compatibility adjustments in your n8n instance.
