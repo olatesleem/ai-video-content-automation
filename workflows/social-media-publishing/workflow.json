@@ -6,17 +6,17 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "YOUR_GOOGLE_SHEET_ID",
+          "value": "REPLACE_WITH_CONTENT_CALENDAR_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Content calendar",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -161,9 +161,7 @@
         112
       ],
       "id": "e3fc11ec-5318-4ef0-8040-d23eb5c69713",
-      "name": "Update row in sheet1",
-      "notes": "Marks the corresponding content-calendar row as POSTED after the Postiz publishing step.",
-      "notesInFlow": true
+      "name": "Update row in sheet1"
     },
     {
       "parameters": {
@@ -176,9 +174,7 @@
         -48
       ],
       "id": "9236b02d-9488-4969-96af-3b219d3dca20",
-      "name": "Postiz1",
-      "notes": "Retrieves the connected Postiz social integrations.",
-      "notesInFlow": true
+      "name": "Postiz1"
     },
     {
       "parameters": {
@@ -261,25 +257,23 @@
         -16
       ],
       "id": "e42cbb9c-7d10-48cc-b3b3-7df6f5a15562",
-      "name": "Postiz2",
-      "notes": "Submits a TikTok post using the selected Postiz integration and video asset ID/path from the spreadsheet. The exported example includes fixed sample copy and a fixed date; review before enabling.",
-      "notesInFlow": true
+      "name": "Postiz2"
     },
     {
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "YOUR_GOOGLE_SHEET_ID",
+          "value": "REPLACE_WITH_CONTENT_CALENDAR_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Content calendar",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SHEET_ID/edit#gid=0"
         },
         "filtersUI": {
           "values": [
@@ -297,9 +291,7 @@
       "position": [
         -272,
         -16
-      ],
-      "notes": "Reads the content-calendar row(s) using the TIKTOK STATUS column as the configured lookup field. Confirm the filter value and row-selection behaviour before production use.",
-      "notesInFlow": true
+      ]
     },
     {
       "parameters": {},
@@ -311,9 +303,7 @@
       ],
       "id": "5fdc80d6-77b7-4678-bc69-779372a1f2a9",
       "name": "When clicking ‘Execute workflow’",
-      "disabled": true,
-      "notes": "Disabled manual test trigger retained from the original export.",
-      "notesInFlow": true
+      "disabled": true
     },
     {
       "parameters": {
@@ -340,9 +330,7 @@
         -16
       ],
       "id": "ed3148e2-c09b-4a1f-a334-293588cc1666",
-      "name": "Schedule Trigger",
-      "notes": "Scheduled publishing entry point. The export contains multiple interval entries; review the schedule configuration before activation.",
-      "notesInFlow": true
+      "name": "Schedule Trigger"
     }
   ],
   "connections": {
@@ -401,5 +389,8 @@
     "executionOrder": "v1",
     "binaryMode": "separate",
     "availableInMCP": false
-  }
+  },
+  "meta": {},
+  "nodeGroups": [],
+  "tags": []
 }
